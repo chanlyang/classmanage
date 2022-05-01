@@ -1,7 +1,6 @@
 package com.jsut.classmanage.common.api;
 
 
-
 public enum ApiErrorCode implements IErrorCode {
 
     /**
@@ -23,7 +22,9 @@ public enum ApiErrorCode implements IErrorCode {
     /**
      * 参数校验错误
      */
-    VALIDATE_FAILED(404, "参数检验失败");
+    VALIDATE_FAILED(404, "参数检验失败"),
+
+    EMPTY_PARAM(5001, "请求参数为空");
 
     private final Integer code;
     private final String message;

@@ -34,4 +34,10 @@ public interface AdminService extends IService<Admin> {
      * @return
      */
     UserInfoDto getUserByUserId(String userId);
+
+    /**
+     * 修改信息
+     * @param dto
+     */
+    void updateInfo(RegisterDTO dto);
 }

@@ -35,7 +35,7 @@ public class StudentNotice {
     /**
      * 公告id
      */
-    private String noticeId;
+    private Long noticeId;
 
     /**
      * 通知标题

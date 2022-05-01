@@ -1,11 +1,14 @@
 package com.jsut.classmanage.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.segments.MergeSegments;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Maps;
+import com.jsut.classmanage.common.api.ApiResult;
 import com.jsut.classmanage.common.exception.ApiAsserts;
 import com.jsut.classmanage.jwt.JwtUtil;
 import com.jsut.classmanage.mapper.AdminMapper;
@@ -129,6 +132,8 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
                 ApiAsserts.fail("学生信息不存在！");
             }
             userInfoDto.setUserName(student.getUserName());
+            userInfoDto.setPhone(student.getPhone());
+            userInfoDto.setEmail(student.getEmail());
         } else {
             Techer techer = techerService.getOne(new QueryWrapper<Techer>().lambda()
                     .eq(Techer::getUserId, userId));
@@ -136,7 +141,31 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
                 ApiAsserts.fail("教师信息不存在！");
             }
             userInfoDto.setUserName(techer.getUserName());
+            userInfoDto.setPhone(techer.getPhone());
+            userInfoDto.setEmail(techer.getEmail());
         }
         return userInfoDto;
+    }
+
+    @Override
+    public void updateInfo(RegisterDTO dto) {
+        log.info("修改信息入参:{}", JSONObject.toJSONString(dto));
+        Admin admin = adminMapper.selectOne(new QueryWrapper<Admin>().lambda()
+                .eq(Admin::getUserId, dto.getUserId()));
+        if (Objects.isNull(admin)) {
+            ApiAsserts.fail("用户没找到");
+        }
+        LambdaUpdateWrapper<Student> wrapper = new LambdaUpdateWrapper<>();
+        wrapper.eq(Student::getUserId, dto);
+        if (StringUtils.isEmpty(dto.getUserName())) {
+            wrapper.set(Student::getUserName, dto.getUserName());
+        }
+        if (StringUtils.isEmpty(dto.getPhone())) {
+            wrapper.set(Student::getPhone, dto.getPhone());
+        }
+        if (StringUtils.isEmpty(dto.getEmail())) {
+            wrapper.set(Student::getEmail, dto.getEmail());
+        }
+        studentService.update(wrapper);
     }
 }

@@ -7,6 +7,7 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.sql.Timestamp;
+import java.util.Objects;
 
 /**
  * @className LeaveSchool
@@ -79,6 +80,19 @@ public class LeaveSchool {
 
         private int value;
         private String desc;
+
+
+        public static LeaveStatus getByValue(Integer value) {
+            if (Objects.isNull(value)) {
+                return DEFAULT;
+            }
+            for (LeaveStatus it : LeaveStatus.values()) {
+                if (it.getValue() == value) {
+                    return it;
+                }
+            }
+            return DEFAULT;
+        }
     }
 
 }

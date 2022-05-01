@@ -9,6 +9,8 @@ import com.jsut.classmanage.model.dto.RegisterDTO;
 import com.jsut.classmanage.model.dto.UserInfoDto;
 import com.jsut.classmanage.service.AdminService;
 import com.jsut.classmanage.util.MD5Utils;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ObjectUtils;
@@ -28,6 +30,7 @@ import static com.jsut.classmanage.jwt.JwtUtil.USER_NAME;
 /**
  * @className UserController
  **/
+@Api(tags = "用户管理")
 @Slf4j
 @RestController
 @RequestMapping("/admin/user")
@@ -37,7 +40,8 @@ public class AdminController {
     private AdminService adminService;
 
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    @ApiOperation(value = "用户登录", notes = "登录，学生老师都用此接口，用角色区分")
+    @PostMapping(value = "/login")
     public ApiResult<Map<String, String>> login(@Valid @RequestBody LoginDTO dto) {
         log.info("登录入参:{}", JSONObject.toJSONString(dto));
         Map<String, String> result = adminService.executeLogin(dto);
@@ -48,7 +52,8 @@ public class AdminController {
     }
 
 
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    @ApiOperation(value = "用户注册", notes = "注册，学生老师都用此接口，用角色区分")
+    @PostMapping(value = "/register")
     public ApiResult<Map<String, Object>> register(@Valid @RequestBody RegisterDTO dto) {
         JSONObject.toJSONString(dto);
         log.info("注册入参:{}", JSONObject.toJSONString(dto));
@@ -62,6 +67,7 @@ public class AdminController {
     }
 
 
+    @ApiOperation(value = "上传图片")
     @PostMapping("/uploadImg")
     public ApiResult<String> graphicImg(@RequestParam("file") MultipartFile file) {
         log.info("上传图片");
@@ -87,18 +93,31 @@ public class AdminController {
         }
     }
 
-    @RequestMapping(value = "/info", method = RequestMethod.GET)
+    @ApiOperation(value = "获取用户信息")
+    @GetMapping(value = "/info")
     public ApiResult<UserInfoDto> getUser(@RequestHeader(value = USER_NAME) String userId) {
         log.info("获取用户信息入参:{}", userId);
         UserInfoDto user = adminService.getUserByUserId(userId);
         return ApiResult.success(user);
     }
 
-    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    @ApiOperation(value = "更新用户信息")
+    @PostMapping("/updateInfo")
+    public ApiResult updateInfo(@RequestBody RegisterDTO dto,
+                                @RequestHeader(value = USER_NAME) String userId) {
+
+        log.info("修改信息入参:{}", JSONObject.toJSONString(dto));
+        dto.setUserId(userId);
+        adminService.updateInfo(dto);
+        return ApiResult.success();
+
+    }
+
+    @ApiOperation(value = "退出登录")
+    @GetMapping(value = "/logout")
     public ApiResult<Object> logOut() {
         return ApiResult.success(null, "注销成功");
     }
-
 
 
     public static void main(String[] args) {
