@@ -9,6 +9,6 @@ import org.springframework.stereotype.Service;
 /**
  * @className TecherServiceImpl
  **/
-@Service
+@Service("techerService")
 public class TecherServiceImpl extends ServiceImpl<TecherMapper, Techer> implements TecherService {
 }

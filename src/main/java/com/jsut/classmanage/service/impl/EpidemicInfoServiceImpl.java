@@ -9,6 +9,6 @@ import org.springframework.stereotype.Service;
 /**
  * @className EpidemicInfoServiceImpl
  **/
-@Service
+@Service("epidemicInfoService")
 public class EpidemicInfoServiceImpl extends ServiceImpl<EpidemicInfoMapper, EpidemicInfo> implements EpidemicInfoService {
 }

@@ -9,6 +9,6 @@ import org.springframework.stereotype.Service;
 /**
  * @className StudentServiceImpl
  **/
-@Service
+@Service("studentService")
 public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> implements StudentService {
 }

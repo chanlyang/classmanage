@@ -9,6 +9,6 @@ import org.springframework.stereotype.Service;
 /**
  * @className LeaveSchoolServiceImpl
  **/
-@Service
+@Service("leaveSchoolService")
 public class LeaveSchoolServiceImpl extends ServiceImpl<LeaveSchoolMapper, LeaveSchool> implements LeaveSchoolService {
 }

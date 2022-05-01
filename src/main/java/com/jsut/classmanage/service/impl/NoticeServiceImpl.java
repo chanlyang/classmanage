@@ -9,6 +9,6 @@ import org.springframework.stereotype.Service;
 /**
  * @className NoticeServiceImpl
  **/
-@Service
+@Service("noticeService")
 public class NoticeServiceImpl extends ServiceImpl<NoticeMapper, Notice> implements NoticeService {
 }

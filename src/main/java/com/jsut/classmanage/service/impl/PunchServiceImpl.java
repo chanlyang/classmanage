@@ -9,6 +9,6 @@ import org.springframework.stereotype.Service;
 /**
  * @className PunchServiceImpl
  **/
-@Service
+@Service("punchService")
 public class PunchServiceImpl extends ServiceImpl<PunchMapper, Punch> implements PunchService {
 }

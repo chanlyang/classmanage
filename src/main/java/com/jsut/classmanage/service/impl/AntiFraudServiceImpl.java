@@ -9,6 +9,6 @@ import org.springframework.stereotype.Service;
 /**
  * @className AntiFraudServiceImpl
  **/
-@Service
+@Service("antiFraudService")
 public class AntiFraudServiceImpl extends ServiceImpl<AntiFraudMapper, AntiFraud> implements AntiFraudService {
 }
