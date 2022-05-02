@@ -3,9 +3,7 @@ package com.jsut.classmanage.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.conditions.update.UpdateChainWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Lists;
@@ -111,6 +109,7 @@ public class LeaveSchoolServiceImpl extends ServiceImpl<LeaveSchoolMapper, Leave
 
         List<MyApplyVo> result = Lists.transform(leaveSchoolIPage.getRecords(), it -> {
             MyApplyVo myApplyVo = new MyApplyVo();
+            myApplyVo.setLeaveId(it.getId());
             myApplyVo.setUserId(it.getUserId());
             Student student = studentMapper.selectOne(new QueryWrapper<Student>().lambda()
                     .eq(Student::getUserId, it.getUserId()));

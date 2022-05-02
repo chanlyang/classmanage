@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.jsut.classmanage.common.api.ApiResult;
 import com.jsut.classmanage.model.EpidemicInfo;
 import com.jsut.classmanage.model.vo.EpidmicResultVo;
+import com.jsut.classmanage.model.vo.FillDailyNewVo;
 import com.jsut.classmanage.model.vo.FillDailyVo;
 import com.jsut.classmanage.util.PageUtils;
 
@@ -47,5 +48,5 @@ public interface EpidemicInfoService extends IService<EpidemicInfo> {
      * @param size
      * @return
      */
-    PageUtils<FillDailyVo> queryFillDaily(Integer healthCode, Integer isOutSchool, Integer noFill, Integer pageNo, Integer size);
+    PageUtils<FillDailyNewVo> queryFillDaily(Integer healthCode, Integer isOutSchool, Integer noFill, Integer pageNo, Integer size);
 }

@@ -5,6 +5,7 @@ import com.jsut.classmanage.common.api.ApiErrorCode;
 import com.jsut.classmanage.common.api.ApiResult;
 import com.jsut.classmanage.model.EpidemicInfo;
 import com.jsut.classmanage.model.vo.EpidmicResultVo;
+import com.jsut.classmanage.model.vo.FillDailyNewVo;
 import com.jsut.classmanage.model.vo.FillDailyVo;
 import com.jsut.classmanage.service.EpidemicInfoService;
 import com.jsut.classmanage.util.PageUtils;
@@ -78,14 +79,14 @@ public class EpidemicController {
             @ApiImplicitParam(name = "size", required = false, example = "10")
     })
     @GetMapping("/queryFillDaily")
-    public ApiResult<PageUtils<FillDailyVo>> queryFillDaily(@RequestParam(value = "healthCode", required = false) Integer healthCode,
-                                                            @RequestParam(value = "isOutSchool", required = false) Integer isOutSchool,
-                                                            @RequestParam(value = "noFill", required = false) Integer noFill,
-                                                            @RequestParam(value = "pageNo", defaultValue = "1") Integer pageNo,
-                                                            @RequestParam(value = "size", defaultValue = "10") Integer size) {
+    public ApiResult<PageUtils<FillDailyNewVo>> queryFillDaily(@RequestParam(value = "healthCode", required = false) Integer healthCode,
+                                                               @RequestParam(value = "isOutSchool", required = false) Integer isOutSchool,
+                                                               @RequestParam(value = "noFill", required = false) Integer noFill,
+                                                               @RequestParam(value = "pageNo", defaultValue = "1") Integer pageNo,
+                                                               @RequestParam(value = "size", defaultValue = "10") Integer size) {
 
         log.info("查询每日填报入参，healthCode:{},isOutSchool:{},nofill:{}", healthCode, isOutSchool, noFill);
-        PageUtils<FillDailyVo> pageUtils = epidemicInfoService.queryFillDaily(healthCode, isOutSchool, noFill, pageNo, size);
+        PageUtils<FillDailyNewVo> pageUtils = epidemicInfoService.queryFillDaily(healthCode, isOutSchool, noFill, pageNo, size);
         return ApiResult.success(pageUtils);
     }
 

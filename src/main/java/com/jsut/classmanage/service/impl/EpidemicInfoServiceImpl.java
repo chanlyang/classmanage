@@ -13,6 +13,7 @@ import com.jsut.classmanage.mapper.StudentMapper;
 import com.jsut.classmanage.model.EpidemicInfo;
 import com.jsut.classmanage.model.Student;
 import com.jsut.classmanage.model.vo.EpidmicResultVo;
+import com.jsut.classmanage.model.vo.FillDailyNewVo;
 import com.jsut.classmanage.model.vo.FillDailyVo;
 import com.jsut.classmanage.service.EpidemicInfoService;
 import com.jsut.classmanage.util.PageUtils;
@@ -161,7 +162,7 @@ public class EpidemicInfoServiceImpl extends ServiceImpl<EpidemicInfoMapper, Epi
     }
 
     @Override
-    public PageUtils<FillDailyVo> queryFillDaily(Integer healthCode, Integer isOutSchool, Integer noFill, Integer pageNo, Integer size) {
+    public PageUtils<FillDailyNewVo> queryFillDaily(Integer healthCode, Integer isOutSchool, Integer noFill, Integer pageNo, Integer size) {
 
         LocalDateTime startTime = LocalDate.now().atStartOfDay();
         LocalDateTime endTime = LocalDate.now().plusDays(1).atStartOfDay();
@@ -195,16 +196,35 @@ public class EpidemicInfoServiceImpl extends ServiceImpl<EpidemicInfoMapper, Epi
             }
             return fillDailyVo;
         });
-        if (Objects.nonNull(healthCode)) {
+        if (Objects.nonNull(healthCode) && healthCode>-1) {
             result = result.stream().filter(it -> it.getHealthCode().equals(healthCode)).collect(Collectors.toList());
         }
-        if (Objects.nonNull(isOutSchool)) {
+        if (Objects.nonNull(isOutSchool) && isOutSchool>-1) {
             result = result.stream().filter(it -> it.getIsOutSchool().equals(isOutSchool)).collect(Collectors.toList());
         }
-        if (Objects.nonNull(noFill)) {
+        if (Objects.nonNull(noFill) && noFill > 0) {
             result = result.stream().filter(it -> !userIds.contains(it.getUserId())).collect(Collectors.toList());
         }
 
-        return new PageUtils<FillDailyVo>(result, Long.valueOf(studentIPage.getTotal()).intValue(), Long.valueOf(studentIPage.getSize()).intValue(), Long.valueOf(studentIPage.getCurrent()).intValue());
+        List<FillDailyNewVo> resultNew = Lists.transform(result, it ->{
+            FillDailyNewVo fillDailyNewVo = new FillDailyNewVo();
+            fillDailyNewVo.setUserId(it.getUserId());
+            fillDailyNewVo.setUserName(it.getUserName());
+            EpidemicInfo.HealthCodeEnum healthCodeEnum = EpidemicInfo.HealthCodeEnum.getByValue(it.getHealthCode());
+            fillDailyNewVo.setHealthCode(healthCodeEnum.getDesc());
+            fillDailyNewVo.setIsFever(it.getIsFever() == 0 ? "否" : "是");
+            fillDailyNewVo.setIsCough(it.getIsCough() == 0 ? "否" : "是");
+            fillDailyNewVo.setOtherDiscomfort(it.getOtherDiscomfort() == 0 ? "否" : "是");
+            fillDailyNewVo.setIsNucleicAcid(it.getIsNucleicAcid() == 0 ? "否" : "是");
+            fillDailyNewVo.setVaccineNum(String.valueOf(it.getVaccineNum()));
+            fillDailyNewVo.setIsOutSchool(it.getIsOutSchool() == 0 ? "否" : "是");
+            fillDailyNewVo.setOtherThings(it.getOtherThings());
+            fillDailyNewVo.setCreateTime(it.getCreateTime());
+
+            return fillDailyNewVo;
+        });
+
+
+        return new PageUtils<FillDailyNewVo>(resultNew, Long.valueOf(studentIPage.getTotal()).intValue(), Long.valueOf(studentIPage.getSize()).intValue(), Long.valueOf(studentIPage.getCurrent()).intValue());
     }
 }

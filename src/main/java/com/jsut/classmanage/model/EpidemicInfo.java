@@ -95,6 +95,16 @@ public class EpidemicInfo {
         private int value;
         private String desc;
 
+
+        public static HealthCodeEnum getByValue(int value){
+            for(HealthCodeEnum it : HealthCodeEnum.values()){
+                if(it.getValue() == value){
+                    return it;
+                }
+            }
+            return GREEN;
+        }
+
     }
 
 }

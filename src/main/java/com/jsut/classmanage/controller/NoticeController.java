@@ -118,15 +118,16 @@ public class NoticeController {
             @ApiImplicitParam(name = "size", required = false, example = "10")
     })
     @GetMapping("/acceptUser")
-    public ApiResult<PageUtils<NoticeUserVo>> acceptUserList(@RequestParam Long noitceId,
+    public ApiResult<PageUtils<NoticeUserVo>> acceptUserList(
                                                              @RequestParam(value = "pageNo", defaultValue = "1") Integer pageNo,
-                                                             @RequestParam(value = "size", defaultValue = "10") Integer size) {
+                                                             @RequestParam(value = "size", defaultValue = "10") Integer size,
+                                                             @RequestParam(value = "noticeId") Long noticeId) {
 
-        log.info("接受公告用户列表param:{}", noitceId);
-        if (Objects.isNull(noitceId)) {
+        log.info("接受公告用户列表param:{}", noticeId);
+        if (Objects.isNull(noticeId)) {
             return ApiResult.failed(ApiErrorCode.EMPTY_PARAM);
         }
-        PageUtils<NoticeUserVo> pageUtils = noticeService.pageUserNoticeInfo(pageNo, size, noitceId);
+        PageUtils<NoticeUserVo> pageUtils = noticeService.pageUserNoticeInfo(pageNo, size, noticeId);
         return ApiResult.success(pageUtils);
     }
 

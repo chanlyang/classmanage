@@ -7,7 +7,7 @@ import lombok.Data;
  **/
 @Data
 public class MyApplyVo {
-
+    private Long leaveId;
     private String userId;
     private String name;
     private String reason;
