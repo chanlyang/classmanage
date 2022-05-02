@@ -21,15 +21,12 @@ import com.jsut.classmanage.model.vo.ApplyLeaveSchool;
 import com.jsut.classmanage.model.vo.MyApplyVo;
 import com.jsut.classmanage.service.LeaveSchoolService;
 import com.jsut.classmanage.util.PageUtils;
-import com.sun.tools.corba.se.idl.constExpr.Times;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.sql.Time;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
