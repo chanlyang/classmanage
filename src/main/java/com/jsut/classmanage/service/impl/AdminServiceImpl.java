@@ -1,14 +1,11 @@
 package com.jsut.classmanage.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.segments.MergeSegments;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Maps;
-import com.jsut.classmanage.common.api.ApiResult;
 import com.jsut.classmanage.common.exception.ApiAsserts;
 import com.jsut.classmanage.jwt.JwtUtil;
 import com.jsut.classmanage.mapper.AdminMapper;
@@ -23,14 +20,12 @@ import com.jsut.classmanage.service.StudentService;
 import com.jsut.classmanage.service.TecherService;
 import com.jsut.classmanage.util.MD5Utils;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.User;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
 
@@ -156,14 +151,14 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
             ApiAsserts.fail("用户没找到");
         }
         LambdaUpdateWrapper<Student> wrapper = new LambdaUpdateWrapper<>();
-        wrapper.eq(Student::getUserId, dto);
-        if (StringUtils.isEmpty(dto.getUserName())) {
+        wrapper.eq(Student::getUserId, dto.getUserId());
+        if (StringUtils.isNotEmpty(dto.getUserName())) {
             wrapper.set(Student::getUserName, dto.getUserName());
         }
-        if (StringUtils.isEmpty(dto.getPhone())) {
+        if (StringUtils.isNotEmpty(dto.getPhone())) {
             wrapper.set(Student::getPhone, dto.getPhone());
         }
-        if (StringUtils.isEmpty(dto.getEmail())) {
+        if (StringUtils.isNotEmpty(dto.getEmail())) {
             wrapper.set(Student::getEmail, dto.getEmail());
         }
         studentService.update(wrapper);

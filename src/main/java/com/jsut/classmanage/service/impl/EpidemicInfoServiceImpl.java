@@ -12,6 +12,7 @@ import com.jsut.classmanage.mapper.EpidemicInfoMapper;
 import com.jsut.classmanage.mapper.StudentMapper;
 import com.jsut.classmanage.model.EpidemicInfo;
 import com.jsut.classmanage.model.Student;
+import com.jsut.classmanage.model.vo.EpidmicResultVo;
 import com.jsut.classmanage.model.vo.FillDailyVo;
 import com.jsut.classmanage.service.EpidemicInfoService;
 import com.jsut.classmanage.util.PageUtils;
@@ -62,7 +63,7 @@ public class EpidemicInfoServiceImpl extends ServiceImpl<EpidemicInfoMapper, Epi
 
 
     @Override
-    public Map<String, String> todayEpidemic() {
+    public List<EpidmicResultVo> todayEpidemic() {
 
         LocalDateTime startTime = LocalDate.now().atStartOfDay();
         LocalDateTime endTime = LocalDate.now().plusDays(1).atStartOfDay();
@@ -71,31 +72,58 @@ public class EpidemicInfoServiceImpl extends ServiceImpl<EpidemicInfoMapper, Epi
                 .lt(EpidemicInfo::getCreateTime, endTime)
                 .gt(EpidemicInfo::getCreateTime, startTime));
 
-        Map<String, String> result = Maps.newHashMap();
+        List<EpidmicResultVo> result = Lists.newArrayList();
         epidemicFileds.forEach(it -> {
             switch (it) {
                 case "healthCode":
-                    result.put("red", String.valueOf(epidemicInfos.stream().filter(x -> x.getHealthCode() == EpidemicInfo.HealthCodeEnum.RED.getValue()).count()));
-                    result.put("yellow", String.valueOf(epidemicInfos.stream().filter(y -> y.getHealthCode() == EpidemicInfo.HealthCodeEnum.RED.getValue()).count()));
-                    result.put("green", String.valueOf(epidemicInfos.stream().filter(z -> z.getHealthCode() == EpidemicInfo.HealthCodeEnum.RED.getValue()).count()));
+                    EpidmicResultVo epidmicResultVo1 = new EpidmicResultVo();
+                    epidmicResultVo1.setName("红码");
+                    epidmicResultVo1.setTotal( String.valueOf(epidemicInfos.stream().filter(x -> x.getHealthCode() == EpidemicInfo.HealthCodeEnum.RED.getValue()).count()));
+                    EpidmicResultVo epidmicResultVo2 = new EpidmicResultVo();
+                    epidmicResultVo2.setName("黄码");
+                    epidmicResultVo2.setTotal(String.valueOf(epidemicInfos.stream().filter(y -> y.getHealthCode() == EpidemicInfo.HealthCodeEnum.YELLOW.getValue()).count()));
+                    EpidmicResultVo epidmicResultVo3 = new EpidmicResultVo();
+                    epidmicResultVo3.setName("绿码");
+                    epidmicResultVo3.setTotal(String.valueOf(epidemicInfos.stream().filter(z -> z.getHealthCode() == EpidemicInfo.HealthCodeEnum.GREEN.getValue()).count()));
+                    result.add(epidmicResultVo1);
+                    result.add(epidmicResultVo2);
+                    result.add(epidmicResultVo3);
                     break;
                 case "isFever":
-                    result.put(it, String.valueOf(epidemicInfos.stream().mapToInt(EpidemicInfo::getIsFever).sum()));
+                    EpidmicResultVo epidmicResultVo4 = new EpidmicResultVo();
+                    epidmicResultVo4.setName("发烧人数");
+                    epidmicResultVo4.setTotal( String.valueOf(epidemicInfos.stream().mapToInt(EpidemicInfo::getIsFever).sum()));
+                    result.add(epidmicResultVo4);
                     break;
                 case "isCough":
-                    result.put(it, String.valueOf(epidemicInfos.stream().mapToInt(EpidemicInfo::getIsCough).sum()));
+                    EpidmicResultVo epidmicResultVo5 = new EpidmicResultVo();
+                    epidmicResultVo5.setName("咳嗽人数");
+                    epidmicResultVo5.setTotal(String.valueOf(epidemicInfos.stream().mapToInt(EpidemicInfo::getIsCough).sum()));
+                    result.add(epidmicResultVo5);
                     break;
                 case "otherDiscomfort":
-                    result.put(it, String.valueOf(epidemicInfos.stream().mapToInt(EpidemicInfo::getOtherDiscomfort).sum()));
+                    EpidmicResultVo epidmicResultVo6 = new EpidmicResultVo();
+                    epidmicResultVo6.setName("其他不适人数");
+                    epidmicResultVo6.setTotal(String.valueOf(epidemicInfos.stream().mapToInt(EpidemicInfo::getOtherDiscomfort).sum()));
+                    result.add(epidmicResultVo6);
                     break;
                 case "isNucleicAcid":
-                    result.put(it, String.valueOf(epidemicInfos.stream().mapToInt(EpidemicInfo::getIsNucleicAcid).sum()));
+                    EpidmicResultVo epidmicResultVo7 = new EpidmicResultVo();
+                    epidmicResultVo7.setName("今日做核酸人数");
+                    epidmicResultVo7.setTotal(String.valueOf(epidemicInfos.stream().mapToInt(EpidemicInfo::getIsNucleicAcid).sum()));
+                    result.add(epidmicResultVo7);
                     break;
                 case "vaccineNum":
-                    result.put(it, String.valueOf(epidemicInfos.stream().mapToInt(EpidemicInfo::getVaccineNum).sum()));
+                    EpidmicResultVo epidmicResultVo8 = new EpidmicResultVo();
+                    epidmicResultVo8.setName("本班接种疫苗数");
+                    epidmicResultVo8.setTotal( String.valueOf(epidemicInfos.stream().mapToInt(EpidemicInfo::getVaccineNum).sum()));
+                    result.add(epidmicResultVo8);
                     break;
                 case "isOutSchool":
-                    result.put(it, String.valueOf(epidemicInfos.stream().mapToInt(EpidemicInfo::getIsOutSchool).sum()));
+                    EpidmicResultVo epidmicResultVo9 = new EpidmicResultVo();
+                    epidmicResultVo9.setName("未在校人数");
+                    epidmicResultVo9.setTotal(String.valueOf(epidemicInfos.stream().mapToInt(EpidemicInfo::getIsOutSchool).sum()));
+                    result.add(epidmicResultVo9);
                     break;
                 default:
                     log.error("没找到疫情统计类型");

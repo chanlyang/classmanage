@@ -3,6 +3,7 @@ package com.jsut.classmanage.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.jsut.classmanage.common.api.ApiResult;
 import com.jsut.classmanage.model.EpidemicInfo;
+import com.jsut.classmanage.model.vo.EpidmicResultVo;
 import com.jsut.classmanage.model.vo.FillDailyVo;
 import com.jsut.classmanage.util.PageUtils;
 
@@ -17,7 +18,7 @@ public interface EpidemicInfoService extends IService<EpidemicInfo> {
      * 今日疫情
      * @return
      */
-    Map<String, String> todayEpidemic();
+    List<EpidmicResultVo> todayEpidemic();
 
     /**
      * 发布疫情信息

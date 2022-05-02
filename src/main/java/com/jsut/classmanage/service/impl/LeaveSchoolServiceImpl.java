@@ -21,11 +21,13 @@ import com.jsut.classmanage.model.vo.ApplyLeaveSchool;
 import com.jsut.classmanage.model.vo.MyApplyVo;
 import com.jsut.classmanage.service.LeaveSchoolService;
 import com.jsut.classmanage.util.PageUtils;
+import com.sun.tools.corba.se.idl.constExpr.Times;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -60,8 +62,8 @@ public class LeaveSchoolServiceImpl extends ServiceImpl<LeaveSchoolMapper, Leave
                 .userId(applyLeaveSchool.getUserId())
                 .leaveReason(applyLeaveSchool.getReason())
                 .leaveTime(Integer.parseInt(applyLeaveSchool.getApplyLongTime()))
-                .startTime(Timestamp.valueOf(LocalDateTime.parse(applyLeaveSchool.getStartTime(), df)))
-                .endTime(Timestamp.valueOf(LocalDateTime.parse(applyLeaveSchool.getEndTime(), df)))
+                .startTime(Timestamp.valueOf(applyLeaveSchool.getStartTime()))
+                .endTime(Timestamp.valueOf(applyLeaveSchool.getEndTime()))
                 .build();
 
         leaveSchoolMapper.insert(leaveSchool);

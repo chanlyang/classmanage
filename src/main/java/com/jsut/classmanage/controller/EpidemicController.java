@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.jsut.classmanage.common.api.ApiErrorCode;
 import com.jsut.classmanage.common.api.ApiResult;
 import com.jsut.classmanage.model.EpidemicInfo;
+import com.jsut.classmanage.model.vo.EpidmicResultVo;
 import com.jsut.classmanage.model.vo.FillDailyVo;
 import com.jsut.classmanage.service.EpidemicInfoService;
 import com.jsut.classmanage.util.PageUtils;
@@ -34,8 +35,8 @@ public class EpidemicController {
 
     @ApiOperation(value = "今日疫情")
     @GetMapping("/todayInfo")
-    public ApiResult<Map<String, String>> todayEpidemic() {
-        Map<String, String> result = epidemicInfoService.todayEpidemic();
+    public ApiResult<List<EpidmicResultVo>> todayEpidemic() {
+        List<EpidmicResultVo> result = epidemicInfoService.todayEpidemic();
         return ApiResult.success(result);
     }
 

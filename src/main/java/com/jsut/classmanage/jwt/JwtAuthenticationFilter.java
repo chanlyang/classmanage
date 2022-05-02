@@ -35,9 +35,33 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private boolean isProtectedUrl(HttpServletRequest request) {
         List<String> protectedPaths = new ArrayList<String>();
-        protectedPaths.add("/api/*");
         protectedPaths.add("/admin/user/info");
         protectedPaths.add("/admin/user/logout");
+        protectedPaths.add("/api/notice/queryPageByAccept");
+        protectedPaths.add("/api/notice/acceptNotice");
+        protectedPaths.add("/api/notice/publicNotice");
+        protectedPaths.add("/api/notice/pageNotice");
+        protectedPaths.add("/api/notice/acceptUser");
+        protectedPaths.add("/api/student/pageList");
+        protectedPaths.add("/api/leave/apply");
+        protectedPaths.add("/api/leave/myApply");
+        protectedPaths.add("/api/leave/pageList");
+        protectedPaths.add("/api/leave/approval");
+        protectedPaths.add("/api/epidemic/todayInfo");
+        protectedPaths.add("/api/epidemic/publishTodayEpidemic");
+        protectedPaths.add("/api/epidemic/todayException");
+        protectedPaths.add("/api/epidemic/fillDaily");
+        protectedPaths.add("/api/epidemic/queryFillDaily");
+        protectedPaths.add("/api/fraud/info");
+        protectedPaths.add("/api/fraud/punch");
+        protectedPaths.add("/api/fraud/publish");
+        protectedPaths.add("/api/fraud/pageList");
+        protectedPaths.add("/api/fraud/studentPunch");
+        protectedPaths.add("/admin/user/updateInfo");
+
+
+
+
 
 
         boolean bFind = false;
