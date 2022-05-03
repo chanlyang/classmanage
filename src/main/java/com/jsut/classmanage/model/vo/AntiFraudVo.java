@@ -23,7 +23,7 @@ public class AntiFraudVo {
     /**
      * 发布人ID
      */
-    private String userId;
+    private String userName;
 
     private String createTime;
 

@@ -63,7 +63,9 @@ public class NoticeServiceImpl extends ServiceImpl<NoticeMapper, Notice> impleme
         Page<Notice> page = new Page<>(pageNo, size);
         IPage<Notice> noticeIPage = noticeMapper.selectPage(page, new QueryWrapper<Notice>().lambda()
                 // .lt(Notice::getCreateTime, endTime) //<
-                .gt(Notice::getCreateTime, time)); // >  这三天所有的公告
+                .gt(Notice::getCreateTime, time)
+                .orderByDesc(Notice::getCreateTime)); // >  这三天所有的公告
+
 
         List<Notice> notices = noticeIPage.getRecords();
 

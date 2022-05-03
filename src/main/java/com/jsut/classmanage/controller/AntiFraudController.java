@@ -73,9 +73,10 @@ public class AntiFraudController {
     })
     @GetMapping("/pageList")
     public ApiResult<PageUtils<AntiFraudVo>> pageList(@RequestParam(value = "pageNo", defaultValue = "1") Integer pageNo,
-                                                      @RequestParam(value = "size", defaultValue = "10") Integer size) {
+                                                      @RequestParam(value = "size", defaultValue = "10") Integer size,
+                                                      @RequestHeader(value = USER_NAME) String userId) {
 
-        PageUtils<AntiFraudVo> pageUtils = antiFraudService.pageList(pageNo, size);
+        PageUtils<AntiFraudVo> pageUtils = antiFraudService.pageList(pageNo, size,userId);
 
         return ApiResult.success(pageUtils);
     }

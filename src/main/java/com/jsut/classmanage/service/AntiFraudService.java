@@ -33,11 +33,13 @@ public interface AntiFraudService extends IService<AntiFraud> {
 
     /**
      * 反诈信息列表
-      * @param pageNo
+     *
+     * @param pageNo
      * @param size
+     * @param userId
      * @return
      */
-    PageUtils<AntiFraudVo> pageList(Integer pageNo, Integer size);
+    PageUtils<AntiFraudVo> pageList(Integer pageNo, Integer size, String userId);
 
     /**
      * 学生学习打卡表

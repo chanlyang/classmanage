@@ -7,13 +7,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Lists;
 import com.jsut.classmanage.common.YesOrNoEnum;
-import com.jsut.classmanage.mapper.AntiFraudMapper;
-import com.jsut.classmanage.mapper.PunchMapper;
-import com.jsut.classmanage.mapper.StudentMapper;
-import com.jsut.classmanage.model.AntiFraud;
-import com.jsut.classmanage.model.Punch;
-import com.jsut.classmanage.model.Student;
-import com.jsut.classmanage.model.StudentNotice;
+import com.jsut.classmanage.common.exception.ApiAsserts;
+import com.jsut.classmanage.mapper.*;
+import com.jsut.classmanage.model.*;
 import com.jsut.classmanage.model.vo.AntiFraudVo;
 import com.jsut.classmanage.model.vo.NoticeUserVo;
 import com.jsut.classmanage.service.AntiFraudService;
@@ -42,6 +38,10 @@ public class AntiFraudServiceImpl extends ServiceImpl<AntiFraudMapper, AntiFraud
     private PunchMapper punchMapper;
     @Resource
     private StudentMapper studentMapper;
+    @Resource
+    private TecherMapper techerMapper;
+    @Resource
+    private AdminMapper adminMapper;
 
 
     private static final DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -55,7 +55,8 @@ public class AntiFraudServiceImpl extends ServiceImpl<AntiFraudMapper, AntiFraud
 
         AntiFraud antiFraud = antiFraudMapper.selectOne(new QueryWrapper<AntiFraud>().lambda()
                 .gt(AntiFraud::getCreateTime, startTime)
-                .lt(AntiFraud::getCreateTime, endTime));
+                .lt(AntiFraud::getCreateTime, endTime)
+                .last("limit 1"));
 
         if (Objects.isNull(antiFraud)) {
             antiFraud = antiFraudMapper.selectOne(new QueryWrapper<AntiFraud>().lambda()
@@ -70,8 +71,9 @@ public class AntiFraudServiceImpl extends ServiceImpl<AntiFraudMapper, AntiFraud
         antiFraudVo.setId(antiFraud.getId());
         antiFraudVo.setTitle(antiFraud.getTitle());
         antiFraudVo.setContent(antiFraud.getContent());
-        antiFraudVo.setUserId(antiFraud.getUserId());
-        antiFraudVo.setCreateTime(df.format(antiFraud.getCreateTime().toLocalDateTime()));
+        Techer techer = techerMapper.selectOne(new QueryWrapper<Techer>().lambda()
+                .eq(Techer::getUserId,antiFraud.getUserId()));
+        antiFraudVo.setUserName(Objects.isNull(techer) ? "未知" : techer.getUserName());        antiFraudVo.setCreateTime(df.format(antiFraud.getCreateTime().toLocalDateTime()));
         antiFraudVo.setIsPunch(Objects.isNull(punch) ? YesOrNoEnum.NO.getValue() : YesOrNoEnum.YES.getValue());
 
         return antiFraudVo;
@@ -93,19 +95,31 @@ public class AntiFraudServiceImpl extends ServiceImpl<AntiFraudMapper, AntiFraud
     }
 
     @Override
-    public PageUtils<AntiFraudVo> pageList(Integer pageNo, Integer size) {
+    public PageUtils<AntiFraudVo> pageList(Integer pageNo, Integer size, String userId) {
 
         Page<AntiFraud> page = new Page<>(pageNo, size);
         IPage<AntiFraud> antiFraudIPage = antiFraudMapper.selectPage(page, new QueryWrapper<AntiFraud>().lambda()
                 .orderByDesc(AntiFraud::getCreateTime));
 
+        Admin admin = adminMapper.selectOne(new QueryWrapper<Admin>().lambda().eq(Admin::getUserId,userId));
+        if(Objects.isNull(admin)){
+            ApiAsserts.fail("没有用户信息");
+        }
         List<AntiFraudVo> result = Lists.transform(antiFraudIPage.getRecords(), it -> {
             AntiFraudVo antiFraudVo = new AntiFraudVo();
             antiFraudVo.setId(it.getId());
             antiFraudVo.setTitle(it.getTitle());
             antiFraudVo.setContent(it.getContent());
-            antiFraudVo.setUserId(it.getUserId());
+            Techer techer = techerMapper.selectOne(new QueryWrapper<Techer>().lambda()
+                    .eq(Techer::getUserId,it.getUserId()));
+            antiFraudVo.setUserName(Objects.isNull(techer) ? "未知" : techer.getUserName());
             antiFraudVo.setCreateTime(df.format(it.getCreateTime().toLocalDateTime()));
+            if(1 == admin.getRoleId()){
+                Punch punch = punchMapper.selectOne(new QueryWrapper<Punch>().lambda()
+                        .eq(Punch::getUserId, admin.getUserId())
+                        .eq(Punch::getAntiFraudId, it.getId()));
+                antiFraudVo.setIsPunch(Objects.isNull(punch) ? YesOrNoEnum.NO.getValue() : YesOrNoEnum.YES.getValue());
+            }
             return antiFraudVo;
         });
 
