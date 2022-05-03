@@ -82,6 +82,7 @@ public class LeaveSchoolServiceImpl extends ServiceImpl<LeaveSchoolMapper, Leave
         List<MyApplyVo> result = Lists.transform(page.getRecords(), it -> {
             MyApplyVo myApplyVo = new MyApplyVo();
             myApplyVo.setUserId(it.getUserId());
+            myApplyVo.setReason(it.getLeaveReason());
             myApplyVo.setName(student.getUserName());
             myApplyVo.setStartTime(df.format(it.getStartTime().toLocalDateTime()));
             myApplyVo.setEndTime(df.format(it.getEndTime().toLocalDateTime()));
