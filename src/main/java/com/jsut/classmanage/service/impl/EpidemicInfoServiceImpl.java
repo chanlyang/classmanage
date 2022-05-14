@@ -197,10 +197,10 @@ public class EpidemicInfoServiceImpl extends ServiceImpl<EpidemicInfoMapper, Epi
             return fillDailyVo;
         });
         if (Objects.nonNull(healthCode) && healthCode>-1) {
-            result = result.stream().filter(it -> it.getHealthCode().equals(healthCode)).collect(Collectors.toList());
+            result = result.stream().filter(it -> healthCode.equals(it.getHealthCode())).collect(Collectors.toList());
         }
         if (Objects.nonNull(isOutSchool) && isOutSchool>-1) {
-            result = result.stream().filter(it -> it.getIsOutSchool().equals(isOutSchool)).collect(Collectors.toList());
+            result = result.stream().filter(it ->  isOutSchool.equals(it.getIsOutSchool())).collect(Collectors.toList());
         }
         if (Objects.nonNull(noFill) && noFill > 0) {
             result = result.stream().filter(it -> !userIds.contains(it.getUserId())).collect(Collectors.toList());

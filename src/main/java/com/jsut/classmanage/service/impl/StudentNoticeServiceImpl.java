@@ -1,7 +1,9 @@
 package com.jsut.classmanage.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.google.common.collect.Lists;
 import com.jsut.classmanage.common.exception.ApiAsserts;
 import com.jsut.classmanage.mapper.NoticeMapper;
 import com.jsut.classmanage.mapper.StudentMapper;
@@ -14,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -50,5 +53,25 @@ public class StudentNoticeServiceImpl extends ServiceImpl<StudentNoticeMapper, S
         int flag = studentNoticeMapper.insert(studentNotice);
 
         return flag > 0;
+    }
+
+    @Override
+    public boolean deleteNotice(Long noitceId) {
+
+        Notice notice = noticeMapper.selectOne(new QueryWrapper<Notice>().lambda().eq(Notice::getId, noitceId));
+        if (Objects.nonNull(notice)) {
+            noticeMapper.deleteById(notice.getId());
+        }
+        List<StudentNotice> studentNotices = studentNoticeMapper.selectList(new QueryWrapper<StudentNotice>().lambda()
+                .eq(StudentNotice::getNoticeId, noitceId));
+
+        List<Long> noticeIds = Lists.transform(studentNotices, it -> it.getId());
+
+        if (CollectionUtil.isNotEmpty(noticeIds)) {
+            studentNoticeMapper.deleteBatchIds(noticeIds);
+        }
+
+
+        return true;
     }
 }

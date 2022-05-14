@@ -14,4 +14,11 @@ public interface StudentNoticeService extends IService<StudentNotice> {
      * @return
      */
     boolean acceptNotice(Long noitceId, String userId);
+
+    /**
+     * 删除通知
+     * @param noitceId
+     * @return
+     */
+    boolean deleteNotice(Long noitceId);
 }

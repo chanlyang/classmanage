@@ -81,6 +81,22 @@ public class NoticeController {
     }
 
 
+    @ApiOperation(value = "删除通知")
+    @ApiParam(name = "noitceId", required = true, example = "10")
+    @GetMapping("/delteNotice")
+    public ApiResult deleteNotice(@RequestParam Long noitceId){
+
+
+        log.info("删除通知入参,noticeId:{},userId:{}", noitceId);
+        if (Objects.isNull(noitceId)) {
+            return ApiResult.failed(ApiErrorCode.FAILED);
+        }
+        boolean flag = studentNoticeService.deleteNotice(noitceId);
+
+        return flag ? ApiResult.success() : ApiResult.failed(ApiErrorCode.FAILED);
+    }
+
+
     @ApiOperation(value = "发布公告")
     @PostMapping("/publicNotice")
     public ApiResult publicNotice(@RequestBody NoticeVo noticeVo,

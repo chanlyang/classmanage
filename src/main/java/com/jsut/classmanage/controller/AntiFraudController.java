@@ -51,6 +51,17 @@ public class AntiFraudController {
         return ApiResult.success();
     }
 
+    @ApiOperation(value = "删除反诈信息")
+    @ApiParam(name = "antiId", required = true, example = "10")
+    @GetMapping("/deleteAnti")
+    public ApiResult deleteAnti(@RequestParam Long anitId) {
+
+        log.info("删除反诈信息入参:{}", anitId);
+
+        antiFraudService.deleteAnti(anitId);
+        return ApiResult.success();
+    }
+
     @ApiOperation(value = "发布反诈信息")
     @PostMapping("/publish")
     public ApiResult publishAntiInfo(@RequestBody AntiFraud antiFraud,
@@ -76,7 +87,7 @@ public class AntiFraudController {
                                                       @RequestParam(value = "size", defaultValue = "10") Integer size,
                                                       @RequestHeader(value = USER_NAME) String userId) {
 
-        PageUtils<AntiFraudVo> pageUtils = antiFraudService.pageList(pageNo, size,userId);
+        PageUtils<AntiFraudVo> pageUtils = antiFraudService.pageList(pageNo, size, userId);
 
         return ApiResult.success(pageUtils);
     }

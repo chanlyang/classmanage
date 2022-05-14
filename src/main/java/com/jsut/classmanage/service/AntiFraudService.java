@@ -49,4 +49,10 @@ public interface AntiFraudService extends IService<AntiFraud> {
      * @return
      */
     PageUtils<NoticeUserVo> pageUserAntiInfo(Integer pageNo, Integer size, Long antiId);
+
+    /**
+     * 删除反诈信息
+     * @param anitId
+     */
+    void deleteAnti(Long anitId);
 }

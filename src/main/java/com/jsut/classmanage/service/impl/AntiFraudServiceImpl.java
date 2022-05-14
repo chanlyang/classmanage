@@ -1,5 +1,6 @@
 package com.jsut.classmanage.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -18,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.jws.Oneway;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -72,8 +74,9 @@ public class AntiFraudServiceImpl extends ServiceImpl<AntiFraudMapper, AntiFraud
         antiFraudVo.setTitle(antiFraud.getTitle());
         antiFraudVo.setContent(antiFraud.getContent());
         Techer techer = techerMapper.selectOne(new QueryWrapper<Techer>().lambda()
-                .eq(Techer::getUserId,antiFraud.getUserId()));
-        antiFraudVo.setUserName(Objects.isNull(techer) ? "未知" : techer.getUserName());        antiFraudVo.setCreateTime(df.format(antiFraud.getCreateTime().toLocalDateTime()));
+                .eq(Techer::getUserId, antiFraud.getUserId()));
+        antiFraudVo.setUserName(Objects.isNull(techer) ? "未知" : techer.getUserName());
+        antiFraudVo.setCreateTime(df.format(antiFraud.getCreateTime().toLocalDateTime()));
         antiFraudVo.setIsPunch(Objects.isNull(punch) ? YesOrNoEnum.NO.getValue() : YesOrNoEnum.YES.getValue());
 
         return antiFraudVo;
@@ -101,8 +104,8 @@ public class AntiFraudServiceImpl extends ServiceImpl<AntiFraudMapper, AntiFraud
         IPage<AntiFraud> antiFraudIPage = antiFraudMapper.selectPage(page, new QueryWrapper<AntiFraud>().lambda()
                 .orderByDesc(AntiFraud::getCreateTime));
 
-        Admin admin = adminMapper.selectOne(new QueryWrapper<Admin>().lambda().eq(Admin::getUserId,userId));
-        if(Objects.isNull(admin)){
+        Admin admin = adminMapper.selectOne(new QueryWrapper<Admin>().lambda().eq(Admin::getUserId, userId));
+        if (Objects.isNull(admin)) {
             ApiAsserts.fail("没有用户信息");
         }
         List<AntiFraudVo> result = Lists.transform(antiFraudIPage.getRecords(), it -> {
@@ -111,10 +114,10 @@ public class AntiFraudServiceImpl extends ServiceImpl<AntiFraudMapper, AntiFraud
             antiFraudVo.setTitle(it.getTitle());
             antiFraudVo.setContent(it.getContent());
             Techer techer = techerMapper.selectOne(new QueryWrapper<Techer>().lambda()
-                    .eq(Techer::getUserId,it.getUserId()));
+                    .eq(Techer::getUserId, it.getUserId()));
             antiFraudVo.setUserName(Objects.isNull(techer) ? "未知" : techer.getUserName());
             antiFraudVo.setCreateTime(df.format(it.getCreateTime().toLocalDateTime()));
-            if(1 == admin.getRoleId()){
+            if (1 == admin.getRoleId()) {
                 Punch punch = punchMapper.selectOne(new QueryWrapper<Punch>().lambda()
                         .eq(Punch::getUserId, admin.getUserId())
                         .eq(Punch::getAntiFraudId, it.getId()));
@@ -146,5 +149,18 @@ public class AntiFraudServiceImpl extends ServiceImpl<AntiFraudMapper, AntiFraud
         });
 
         return new PageUtils<NoticeUserVo>(userVoList, Long.valueOf(studentIPage.getTotal()).intValue(), Long.valueOf(studentIPage.getTotal()).intValue(), Long.valueOf(studentIPage.getCurrent()).intValue());
+    }
+
+    @Override
+    public void deleteAnti(Long anitId) {
+        AntiFraud antiFraud = antiFraudMapper.selectOne(new QueryWrapper<AntiFraud>().lambda().eq(AntiFraud::getId, anitId));
+        if (Objects.nonNull(antiFraud)) {
+            antiFraudMapper.deleteById(antiFraud.getId());
+        }
+        List<Punch> punches = punchMapper.selectList(new QueryWrapper<Punch>().lambda().eq(Punch::getAntiFraudId, antiFraud.getId()));
+        List<Long> punchIds = Lists.transform(punches, it -> it.getId());
+        if (CollectionUtil.isNotEmpty(punchIds)) {
+            punchMapper.deleteBatchIds(punchIds);
+        }
     }
 }

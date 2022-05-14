@@ -8,7 +8,7 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
-    password: qwert123..
+    password: Admin@123
     url: jdbc:mysql://82.157.113.168:3306/classmanage?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=CTT
     type: com.zaxxer.hikari.HikariDataSource
 
