@@ -83,7 +83,7 @@ public class NoticeController {
 
     @ApiOperation(value = "删除通知")
     @ApiParam(name = "noitceId", required = true, example = "10")
-    @GetMapping("/delteNotice")
+    @GetMapping("/deleteNotice")
     public ApiResult deleteNotice(@RequestParam Long noitceId){
 
 
